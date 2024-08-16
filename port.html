@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <link rel="stylesheet" href="port.css">
+</head>
+<body>
+  <video autoplay loop muted id="body-video">
+    <source src="port.mp4" type="video/mp4">
+  </video>
+  <button id="video-buttoncenter" class="video-buttoncenter" onclick="showResume()"> PROJECT </button>
+  <button id="video-buttonright" class="video-buttonright" onclick="showResume()">  RESUME </button>
+  <button id="video-buttonleft" class="video-buttonleft" onclick="showAboutMessage()"> ABOUT </button>
+  <div id="about-message" style="display: none;">
+    <p>Hello! I’m Tanushree, a BCA student at St. Francis De Sales College with a strong interest in coding and design. I’ve been exploring various aspects of coding and leveraging tools like Canva to bring my creative ideas to life.This portfolio showcases some of my projects and achievements, reflecting my passion for blending technical skills with design. I’m always eager to learn and take on new challenges in the tech and design fields.</p>
+  </div>
+  <a id="resume-anchor"></a>
+  <div id="resume-image" style="display: none;">
+    <img src="cv.png" alt="My CV">
+  </div>
+  <div id="about-message" style="display: none;">
+    <p id="about-text"></p>
+  </div>
+  <button class="video-buttoncenter" id="projectButton"><a href="https://github.com/Inosuke226/todo-list-app" target="_blank">Project</a></button>
+
+  <script>
+   function showResume() {
+      document.getElementById("resume-image").style.display = "block";
+      window.scrollTo({ top: document.getElementById("resume-anchor").offsetTop, behavior: "smooth" });
+    }
+    function showAboutMessage() {
+      var aboutText = "Hello! I’m Tanushree, a BCA student at St. Francis De Sales College with a strong interest in coding and design. I’ve been exploring various aspects of coding and leveraging tools like Canva to bring my creative ideas to life.This portfolio showcases some of my projects and achievements, reflecting my passion for blending technical skills with design. I’m always eager to learn and take on new challenges in the tech and design fields.";
+      alert(aboutText);
+    }
+    
+    
+  </script>
+</body>
+</html> 
+
+  
