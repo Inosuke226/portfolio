@@ -1,0 +1,1104 @@
+
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanushree's Dual-Skill Portfolio</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Plotly.js for interactive charts -->
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+    <!-- Load Three.js for 3D visualization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Configure Tailwind for Dark Theme and Blue Shades -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Custom Dark Theme Colors
+                        'primary-blue': '#93c5fd', // Light Blue (for general text/links)
+                        'accent-cyan': '#22d3ee', // Electric Cyan (for main accents/buttons/glow)
+                        'bg-dark': '#0f172a', // Slate-900 (Main dark background)
+                        'bg-card': '#1e293b', // Slate-800 (Card background)
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <!-- Inline CSS for custom scrollbar, smooth transitions, and canvas styling -->
+    <style>
+        /* Custom Scrollbar for Dark Theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; /* Dark track */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b; /* Dark thumb */
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        /* Smooth scroll behavior fallback for non-supported browsers */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Three.js Canvas Container Styling - INCREASED SIZE */
+        #visualization-container {
+            width: 100%;
+            height: 450px; /* Increased height for bigger visualization */
+            background-color: #1e293b;
+            cursor: pointer; /* Indicates it's interactive */
+            position: relative;
+        }
+
+        #visualization-container canvas {
+            display: block;
+        }
+        
+        /* Styling for the Notebook content within the modal */
+        .notebook-cell {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px dashed #334155;
+        }
+        .notebook-cell:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+    </style>
+</head>
+<!-- Applying dark background and light text to the body -->
+<body class="bg-bg-dark text-gray-100 font-sans relative overflow-x-hidden">
+
+    <!-- Cursor Glow Effect (fixed position, large, blurred, light color) -->
+    <div id="cursor-glow" class="fixed w-72 h-72 rounded-full pointer-events-none opacity-0 transition-opacity duration-500 ease-out z-50 transform -translate-x-1/2 -translate-y-1/2" style="background-color: #22d3ee; filter: blur(100px); mix-blend-mode: screen;"></div>
+
+    <!-- Navigation Bar (Sticky and Responsive) -->
+    <header id="navbar" class="sticky top-0 z-50 bg-bg-dark border-b border-accent-cyan/20 transition duration-300">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#home" class="text-xl font-bold text-primary-blue hover:text-accent-cyan transition">Tanushree's Portfolio</a>
+            <div class="hidden md:flex space-x-6">
+                <a href="#skills" class="text-gray-200 hover:text-accent-cyan transition font-medium">Skills</a>
+                <a href="#projects" class="text-gray-200 hover:text-accent-cyan transition font-medium">Projects</a>
+                <a href="#contact" class="text-gray-200 hover:text-accent-cyan transition font-medium">Contact</a>
+            </div>
+            <!-- Mobile Menu Button (Hamburger) -->
+            <button id="mobile-menu-button" class="md:hidden text-primary-blue focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </nav>
+        <!-- Mobile Menu (Hidden by Default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-gray-900 border-t border-accent-cyan/20">
+            <a href="#skills" class="block py-2 px-4 text-sm text-gray-200 hover:bg-primary-blue hover:text-bg-dark transition" onclick="toggleMobileMenu()">Skills</a>
+            <a href="#projects" class="block py-2 px-4 text-sm text-gray-200 hover:bg-primary-blue hover:text-bg-dark transition" onclick="toggleMobileMenu()">Projects</a>
+            <a href="#contact" class="block py-2 px-4 text-sm text-gray-200 hover:bg-primary-blue hover:text-bg-dark transition" onclick="toggleMobileMenu()">Contact</a>
+        </div>
+    </header>
+
+    <!-- 1. Hero Section -->
+    <section id="home" class="py-20 md:py-32 bg-gray-900">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="max-w-3xl mx-auto">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-4">
+                    Data-Driven <span class="text-accent-cyan">Solutions</span> & Modern Web Design
+                </h1>
+                <p class="text-lg md:text-xl text-primary-blue mb-8">
+                    I leverage **Python (NumPy, Seaborn)** for deep data insights and utilize **HTML/CSS/Tailwind** to build beautiful, responsive, and impactful digital experiences.
+                </p>
+                <a href="#projects" class="inline-block bg-primary-blue hover:bg-accent-cyan text-bg-dark font-semibold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+                    View My Work
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Skills Section -->
+    <section id="skills" class="py-16 md:py-24 bg-bg-dark">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center text-primary-blue mb-12">My Core Expertise</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+
+                <!-- Data Science Skills Card (Updated with Demo Button) -->
+                <div class="bg-bg-card p-8 rounded-xl shadow-xl shadow-accent-cyan/10 border-t-4 border-accent-cyan transform hover:scale-[1.02] transition duration-300">
+                    <h3 class="text-3xl font-semibold text-white mb-4 flex items-center">
+                        <svg class="w-8 h-8 mr-3 text-accent-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M18 21V3M3 21h18"></path></svg>
+                        Data Science & Analytics
+                    </h3>
+                    <p class="text-gray-300 mb-6">Expertise in data manipulation, statistical analysis, and creating compelling visualizations for clear storytelling.</p>
+                    <div class="space-y-3 mb-6">
+                        <span class="inline-block bg-primary-blue/30 text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">Python</span>
+                        <span class="inline-block bg-primary-blue/30 text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">NumPy (Vectorization)</span>
+                        <span class="inline-block bg-primary-blue/30 text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">Pandas (ETL)</span>
+                        <span class="inline-block bg-primary-blue/30 text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">Seaborn (Visualization)</span>
+                    </div>
+                    <!-- New Demo Button -->
+                    <button onclick="showDataDemoModal()" class="w-full bg-accent-cyan hover:bg-primary-blue text-bg-dark font-semibold py-3 rounded-lg shadow-md transition duration-300 transform hover:scale-[1.01]">
+                        Show Live Data Demo
+                    </button>
+                </div>
+
+                <!-- Web Development Skills Card -->
+                <div class="bg-bg-card p-8 rounded-xl shadow-xl shadow-primary-blue/10 border-t-4 border-primary-blue transform hover:scale-[1.02] transition duration-300">
+                    <h3 class="text-3xl font-semibold text-white mb-4 flex items-center">
+                        <svg class="w-8 h-8 mr-3 text-primary-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        Web Development & Design
+                    </h3>
+                    <p class="text-gray-300 mb-6">Building modern, accessible, and fast web interfaces with a focus on responsive, user-centric design.</p>
+                    <div class="space-y-3">
+                        <span class="inline-block bg-accent-cyan/30 text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">HTML5 (Structure)</span>
+                        <span class="inline-block bg-accent-cyan/30 text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">CSS3 (Styling)</span>
+                        <span class="inline-block bg-accent-cyan/30 text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">Tailwind CSS (Utility-First)</span>
+                        <span class="inline-block bg-accent-cyan/30 text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">JavaScript (Interactivity)</span>
+                        <span class="inline-block bg-accent-cyan/30 text-white text-sm font-medium px-3 py-1 rounded-full shadow-md">Responsive Design</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Projects Section -->
+    <section id="projects" class="py-16 md:py-24 bg-gray-900">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center text-primary-blue mb-12">Featured Projects</h2>
+            <!-- Updated grid to center the single project -->
+            <div class="grid grid-cols-1 gap-12 max-w-3xl mx-auto">
+
+                <!-- Project 1: Data Science Showcase (NumPy/Seaborn Focused) -->
+                <div class="bg-bg-card rounded-xl shadow-2xl shadow-accent-cyan/10 overflow-hidden group">
+                    <div class="p-6">
+                        <h3 class="text-3xl font-semibold text-white mb-3 group-hover:text-accent-cyan transition duration-300">Predictive Sales Analysis (3D Viz)</h3>
+                        <p class="text-sm font-medium text-primary-blue uppercase mb-4">Data Science | Python, NumPy, Seaborn</p>
+                        
+                        <!-- NEW: Three.js Rotating Visualization Container -->
+                        <div id="visualization-container" class="w-full rounded-lg mb-4 border-2 border-accent-cyan/50 hover:border-accent-cyan transition duration-300">
+                            <!-- Canvas will be inserted here by Three.js -->
+                        </div>
+
+                        <p class="text-gray-300 mb-6">
+                            This project features a comprehensive analysis of sales data. The rotating 3D visualization above provides a **high-level overview** of the core insights: sales volume, category distribution, and trend correlations. Click the graphic or the button below to see the **detailed interactive charts**.
+                        </p>
+                        <!-- UPDATED: Changed link to a button to open the code modal -->
+                        <button onclick="showNotebookModal()" class="text-primary-blue font-medium hover:text-accent-cyan flex items-center transition">
+                            View Python Notebook (Code)
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Contact Section -->
+    <section id="contact" class="py-16 md:py-24 bg-gray-800">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center max-w-2xl">
+            <h2 class="text-4xl font-bold text-primary-blue mb-4">Let's Connect</h2>
+            <p class="text-lg text-gray-300 mb-8">
+                I'm currently seeking new opportunities where I can merge robust data analysis with elegant web development. Reach out!
+            </p>
+            <form id="contact-form" class="space-y-6 bg-bg-dark p-8 rounded-xl shadow-2xl shadow-accent-cyan/10">
+                <input type="text" placeholder="Your Name" required class="w-full p-3 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-accent-cyan focus:border-accent-cyan transition">
+                <input type="email" placeholder="Your Email" required class="w-full p-3 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-accent-cyan focus:border-accent-cyan transition">
+                <textarea placeholder="Your Message" rows="4" required class="w-full p-3 border border-gray-600 bg-gray-900 text-white rounded-lg focus:ring-accent-cyan focus:border-accent-cyan transition"></textarea>
+                <button type="submit" class="w-full bg-accent-cyan hover:bg-primary-blue text-bg-dark font-semibold py-3 rounded-lg shadow-md transition duration-300 transform hover:scale-[1.01]">
+                    Send Message
+                </button>
+                <p id="form-message" class="text-sm text-green-400 hidden mt-4">Thank you for your message! I will be in touch soon.</p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-400 text-sm">
+            <p>&copy; 2025 Dual-Skill Portfolio. Built with HTML, CSS (Tailwind) & Data from Python (NumPy, Seaborn).</p>
+        </div>
+    </footer>
+
+    <!-- Data Science Demo Modal (Kept for consistency, but primary interaction is via Notebook Modal now) -->
+    <div id="data-demo-modal" class="fixed inset-0 z-[100] hidden bg-bg-dark bg-opacity-95 items-center justify-center p-4" onclick="closeDataDemoModal(event)">
+        <!-- Content of this modal is kept but primarily uses the Notebook modal now -->
+        <div class="bg-bg-card w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl border border-primary-blue/30" onclick="event.stopPropagation()">
+            
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center sticky top-0 bg-bg-card z-10">
+                <h3 class="text-3xl font-bold text-accent-cyan">Data Science Live Demo (Basic)</h3>
+                <button onclick="closeDataDemoModal()" class="text-primary-blue hover:text-white transition">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- Modal Body: Tabs and Content -->
+            <div class="p-6">
+                <!-- Tabs -->
+                <div class="flex flex-wrap gap-3 mb-6 border-b border-gray-700 pb-4">
+                    <button id="tab-numpy" onclick="showDemo('numpy')" class="tab-button bg-primary-blue text-bg-dark font-semibold py-2 px-4 rounded-full transition duration-200">NumPy</button>
+                    <button id="tab-pandas" onclick="showDemo('pandas')" class="tab-button bg-gray-600 hover:bg-primary-blue text-white font-semibold py-2 px-4 rounded-full transition duration-200">Pandas</button>
+                    <button id="tab-distribution" onclick="showDemo('distribution')" class="tab-button bg-gray-600 hover:bg-primary-blue text-white font-semibold py-2 px-4 rounded-full transition duration-200">Distribution</button>
+                    <button id="tab-plotly" onclick="showDemo('plotly')" class="tab-button bg-gray-600 hover:bg-primary-blue text-white font-semibold py-2 px-4 rounded-full transition duration-200">Correlation</button>
+                </div>
+
+                <!-- Demo Content Area -->
+                <div id="demo-content">
+                    <div id="demo-numpy" class="demo-pane">
+                        <h4 class="text-2xl font-bold text-primary-blue mb-4">NumPy Array Generation Demo (Line Chart)</h4>
+                        <p class="text-gray-300 mb-4">This simulates generating a raw, structured array.</p>
+                        <div id="numpy-chart" class="w-full h-80 bg-gray-900 rounded-lg p-2 border border-gray-700"></div>
+                        <pre class="bg-gray-900 p-4 rounded-lg mt-4 overflow-x-auto text-sm text-green-400"># Python/NumPy equivalent: print(np.random.uniform(low=20, high=80, size=100))</pre>
+                    </div>
+                    <div id="demo-pandas" class="demo-pane hidden">
+                        <h4 class="text-2xl font-bold text-primary-blue mb-4">Pandas Grouping & Aggregation Demo (Bar Chart)</h4>
+                        <p class="text-gray-300 mb-4">This simulates grouping data by category and showing aggregate results.</p>
+                        <div id="pandas-chart" class="w-full h-80 bg-gray-900 rounded-lg p-2 border border-gray-700"></div>
+                        <pre class="bg-gray-900 p-4 rounded-lg mt-4 overflow-x-auto text-sm text-green-400"># Python/Pandas equivalent: df.groupby('category')['value'].mean().plot.bar()</pre>
+                    </div>
+                    <div id="demo-distribution" class="demo-pane hidden">
+                        <h4 class="text-2xl font-bold text-primary-blue mb-4">Statistical Distribution (Histogram) Demo</h4>
+                        <p class="text-gray-300 mb-4">A distribution plot showing the frequency of randomly generated values.</p>
+                        <div id="distribution-chart" class="w-full h-80 bg-gray-900 rounded-lg p-2 border border-gray-700"></div>
+                        <pre class="bg-gray-900 p-4 rounded-lg mt-4 overflow-x-auto text-sm text-green-400"># Python/Seaborn equivalent: sns.histplot(data=df, x='value', bins=15)</pre>
+                    </div>
+                    <div id="demo-plotly" class="demo-pane hidden">
+                        <h4 class="text-2xl font-bold text-primary-blue mb-4">Seaborn/Plotly Statistical Relationship Demo (Scatter Plot)</h4>
+                        <p class="text-gray-300 mb-4">A Scatter Plot showcasing the relationship between two variables.</p>
+                        <div id="plotly-chart" class="w-full h-80 bg-gray-900 rounded-lg p-2 border border-gray-700"></div>
+                        <pre class="bg-gray-900 p-4 rounded-lg mt-4 overflow-x-auto text-sm text-green-400"># Python/Seaborn equivalent: sns.scatterplot(data=df, x='X', y='Y')</pre>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-gray-700 text-right">
+                <button onclick="closeDataDemoModal()" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition">Close Demo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Python Notebook Modal (Contains user's specific code) -->
+    <div id="notebook-modal" class="fixed inset-0 z-[100] hidden bg-bg-dark bg-opacity-95 items-center justify-center p-4" onclick="closeNotebookModal(event)">
+        <div class="bg-bg-card w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-xl shadow-2xl border border-accent-cyan/30" onclick="event.stopPropagation()">
+            
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-gray-700 flex justify-between items-center sticky top-0 bg-bg-card z-10">
+                <h3 class="text-3xl font-bold text-primary-blue">Conceptual Python Notebook (Your Code Snippets)</h3>
+                <button onclick="closeNotebookModal()" class="text-accent-cyan hover:text-white transition">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <!-- Notebook Content (Generated via JS) -->
+            <div class="p-6">
+                <div id="notebook-content">
+                    <!-- Python code blocks will be inserted here by generatePythonNotebookContent() -->
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-gray-700 text-right">
+                <button onclick="closeNotebookModal()" class="bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded-lg transition">Close Code Viewer</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- JavaScript for interactivity, Plotly, and Three.js -->
+    <script>
+        // --- Navigation Logic ---
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        document.getElementById('mobile-menu-button').addEventListener('click', toggleMobileMenu);
+
+        // --- Form Submission Handler ---
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            const message = document.getElementById('form-message');
+
+            submitButton.classList.add('hidden');
+            message.classList.remove('hidden');
+
+            setTimeout(() => {
+                message.classList.add('hidden');
+                submitButton.classList.remove('hidden');
+                e.target.reset(); // Clear form fields
+            }, 3000); 
+        });
+
+        // --- Cursor Glow Effect Logic (Preserved) ---
+        const cursorGlow = document.getElementById('cursor-glow');
+        let mouseX = 0;
+        let mouseY = 0;
+        let currentX = 0;
+        let currentY = 0;
+        const speed = 0.15;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        function animateGlow() {
+            currentX += (mouseX - currentX) * speed;
+            currentY += (mouseY - currentY) * speed;
+
+            cursorGlow.style.left = `${currentX}px`;
+            cursorGlow.style.top = `${currentY}px`;
+
+            requestAnimationFrame(animateGlow);
+        }
+
+        animateGlow();
+
+        let glowTimeout;
+        document.addEventListener('mousemove', () => {
+             cursorGlow.style.opacity = '0.3'; 
+             clearTimeout(glowTimeout);
+             glowTimeout = setTimeout(() => {
+                 cursorGlow.style.opacity = '0';
+             }, 3000);
+        });
+        
+        // --- Data Demo Modal Logic (for Plotly charts - Kept but simplified) ---
+
+        const dataDemoModal = document.getElementById('data-demo-modal');
+        const demoPanes = document.querySelectorAll('.demo-pane');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const visualizationContainer = document.getElementById('visualization-container');
+
+        visualizationContainer.addEventListener('click', showDataDemoModal);
+
+        function showDataDemoModal() {
+            dataDemoModal.style.display = 'flex';
+            showDemo('numpy');
+        }
+
+        function closeDataDemoModal(event) {
+            if (!event || event.currentTarget === dataDemoModal) {
+                 dataDemoModal.style.display = 'none';
+            }
+        }
+
+        function showDemo(skill) {
+            demoPanes.forEach(pane => pane.classList.add('hidden'));
+            tabButtons.forEach(btn => {
+                btn.classList.remove('bg-primary-blue', 'text-bg-dark');
+                btn.classList.add('bg-gray-600', 'hover:bg-primary-blue', 'text-white');
+            });
+
+            const selectedPane = document.getElementById(`demo-${skill}`);
+            if (selectedPane) selectedPane.classList.remove('hidden');
+
+            const selectedButton = document.getElementById(`tab-${skill}`);
+            if (selectedButton) {
+                selectedButton.classList.remove('bg-gray-600', 'hover:bg-primary-blue', 'text-white');
+                selectedButton.classList.add('bg-primary-blue', 'text-bg-dark');
+            }
+
+            if (skill === 'numpy') renderNumPyChart();
+            if (skill === 'pandas') renderPandasChart();
+            if (skill === 'distribution') renderDistributionChart();
+            if (skill === 'plotly') renderPlotlyChart();
+        }
+
+        function generateRandomData(count, min = 20, max = 80) {
+            const data = [];
+            for (let i = 0; i < count; i++) {
+                data.push(Math.random() * (max - min) + min); 
+            }
+            return data;
+        }
+
+        function renderNumPyChart() {
+            const data = generateRandomData(100); 
+            const index = Array.from({length: 100}, (_, i) => i);
+            
+            const trace = {
+                x: index,
+                y: data,
+                mode: 'lines',
+                line: { color: '#93c5fd', width: 2 },
+            };
+
+            const layout = {
+                title: 'NumPy-style Array Data Over Index',
+                plot_bgcolor: '#1e293b',
+                paper_bgcolor: '#1e293b',
+                font: { color: '#e2e8f0' },
+                xaxis: { title: 'Array Index', gridcolor: '#334155' },
+                yaxis: { title: 'Random Value', gridcolor: '#334155' }
+            };
+
+            Plotly.newPlot('numpy-chart', [trace], layout, {responsive: true, displayModeBar: false});
+        }
+        
+        function renderPandasChart() {
+            const categories = ['North', 'East', 'West', 'South'];
+            const salesMean = categories.map(() => Math.floor(Math.random() * 500) + 100); 
+            
+            const trace = {
+                x: categories,
+                y: salesMean,
+                type: 'bar',
+                marker: { color: salesMean.map(v => v > 400 ? '#22d3ee' : '#93c5fd') }
+            };
+
+            const layout = {
+                title: 'Pandas Aggregation: Avg Sales by Region',
+                plot_bgcolor: '#1e293b',
+                paper_bgcolor: '#1e293b',
+                font: { color: '#e2e8f0' },
+                xaxis: { title: 'Region', gridcolor: '#334155' },
+                yaxis: { title: 'Mean Value (Simulated)', gridcolor: '#334155' }
+            };
+
+            Plotly.newPlot('pandas-chart', [trace], layout, {responsive: true, displayModeBar: false});
+        }
+        
+        function renderDistributionChart() {
+            const data = generateRandomData(500); 
+            
+            const trace = {
+                x: data,
+                type: 'histogram',
+                marker: { color: '#22d3ee', line: { color: '#1e293b', width: 1 } },
+                opacity: 0.8
+            };
+
+            const layout = {
+                title: 'Statistical Distribution (Histogram)',
+                plot_bgcolor: '#1e293b',
+                paper_bgcolor: '#1e293b',
+                font: { color: '#e2e8f0' },
+                xaxis: { title: 'Value Range', gridcolor: '#334155' },
+                yaxis: { title: 'Frequency (Count)', gridcolor: '#334155' },
+                bargap: 0.05 
+            };
+
+            Plotly.newPlot('distribution-chart', [trace], layout, {responsive: true, displayModeBar: false});
+        }
+        
+        function renderPlotlyChart() {
+            const count = 50;
+            const xData = generateRandomData(count, 10, 60);
+            const yData = generateRandomData(count, 40, 90);
+            
+            const trace = {
+                x: xData,
+                y: yData,
+                mode: 'markers',
+                type: 'scatter',
+                marker: { color: '#93c5fd', size: 8, opacity: 0.7 }
+            };
+
+            const layout = {
+                title: 'Plotly/Seaborn: Correlated Variables Scatter Plot',
+                plot_bgcolor: '#1e293b',
+                paper_bgcolor: '#1e293b',
+                font: { color: '#e2e8f0' },
+                xaxis: { title: 'Variable X (Simulated)', gridcolor: '#334155' },
+                yaxis: { title: 'Variable Y (Simulated)', gridcolor: '#334155' }
+            };
+
+            Plotly.newPlot('plotly-chart', [trace], layout, {responsive: true, displayModeBar: false});
+        }
+        
+        // --- Three.js 3D Rotating Visualization Logic (Left untouched) ---
+
+        let scene, camera, renderer;
+        let chartGroups = []; 
+        let currentChartIndex = 0;
+        const switchInterval = 10000; // 10 seconds for each chart
+        let lastSwitchTime = 0;
+        let isInitialized = false; 
+        
+        const VIBRANT_COLORS = [0xff33cc, 0x00ff99, 0x33ccff, 0xffcc00, 0x93c5fd, 0xff6666]; 
+
+        function initThree() {
+            const container = document.getElementById('visualization-container');
+            if (!container || isInitialized) return; 
+
+            scene = new THREE.Scene();
+            
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            camera.position.z = 5;
+            
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(width, height);
+            renderer.setClearColor(0x1e293b, 1);
+            container.appendChild(renderer.domElement);
+
+            window.addEventListener('resize', onWindowResize, false);
+            
+            const ambientLight = new THREE.AmbientLight(0x404040, 5); 
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
+            directionalLight.position.set(5, 5, 5);
+            scene.add(directionalLight);
+
+            createBarChart();
+            createPieChart();
+            createScatterPlot();
+
+            lastSwitchTime = Date.now();
+            chartGroups[0].visible = true; 
+            isInitialized = true;
+        }
+
+        function createBarChart() {
+            const barGroup = new THREE.Group();
+            for(let i = 0; i < 5; i++) {
+                const height = 1.0 + Math.random() * 2.5;
+                const barGeometry = new THREE.BoxGeometry(0.5, height, 0.5);
+                const barMaterial = new THREE.MeshPhongMaterial({ color: VIBRANT_COLORS[i % VIBRANT_COLORS.length] }); 
+                const bar = new THREE.Mesh(barGeometry, barMaterial);
+                bar.position.set(i * 1.2 - 2.4, height / 2 - 2, 0); 
+                barGroup.add(bar);
+            }
+            barGroup.visible = false;
+            chartGroups.push(barGroup);
+            scene.add(barGroup);
+        }
+
+        function createPieChart() {
+            const pieGroup = new THREE.Group();
+            const pieData = [Math.PI, Math.PI / 2, Math.PI * 0.3, Math.PI * 0.2]; 
+            const radius = 2.0;
+
+            let startAngle = 0;
+            for (let i = 0; i < pieData.length; i++) {
+                const segment = new THREE.Mesh(
+                    new THREE.CylinderGeometry(radius, radius, 0.4, 32, 1, false, startAngle, pieData[i]), 
+                    new THREE.MeshPhongMaterial({ color: VIBRANT_COLORS[i % VIBRANT_COLORS.length] })
+                );
+                segment.position.set(0, 0, 0);
+                segment.rotation.x = Math.PI / 2;
+                segment.rotation.z = Math.PI / 2; 
+                pieGroup.add(segment);
+                startAngle += pieData[i];
+            }
+            pieGroup.position.y = 0; 
+            pieGroup.visible = false;
+            chartGroups.push(pieGroup);
+            scene.add(pieGroup);
+        }
+
+        function createScatterPlot() {
+            const scatterGroup = new THREE.Group();
+            const pointGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+            
+            const pointMaterial1 = new THREE.MeshPhongMaterial({ color: VIBRANT_COLORS[3] }); 
+            for (let i = 0; i < 50; i++) {
+                const point = new THREE.Mesh(pointGeometry, pointMaterial1);
+                point.position.set(
+                    Math.random() * 4 - 2, 
+                    Math.random() * 4 - 2, 
+                    Math.random() * 4 - 2
+                ); 
+                scatterGroup.add(point);
+            }
+            
+            const pointMaterial2 = new THREE.MeshPhongMaterial({ color: VIBRANT_COLORS[2] }); 
+            for (let i = 0; i < 30; i++) {
+                const point = new THREE.Mesh(pointGeometry, pointMaterial2);
+                point.position.set(
+                    Math.random() * 1.5 - 3, 
+                    Math.random() * 1.5 + 1.5, 
+                    Math.random() * 1.5 - 0.75
+                ); 
+                scatterGroup.add(point);
+            }
+
+            scatterGroup.visible = false;
+            chartGroups.push(scatterGroup);
+            scene.add(scatterGroup);
+        }
+
+
+        function switchChart() {
+            if (chartGroups[currentChartIndex]) {
+                chartGroups[currentChartIndex].visible = false;
+            }
+
+            currentChartIndex = (currentChartIndex + 1) % chartGroups.length;
+
+            if (chartGroups[currentChartIndex]) {
+                chartGroups[currentChartIndex].visible = true;
+                chartGroups[currentChartIndex].rotation.set(0, 0, 0);
+            }
+
+            lastSwitchTime = Date.now();
+        }
+
+        function onWindowResize() {
+            const container = document.getElementById('visualization-container');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            camera.aspect = width / height;
+            camera.updateProjectionMatrix();
+            renderer.setSize(width, height);
+        }
+
+        function animateLoop() {
+            requestAnimationFrame(animateLoop);
+
+            const currentTime = Date.now();
+            
+            if (currentTime - lastSwitchTime > switchInterval) {
+                switchChart();
+            }
+
+            if (chartGroups[currentChartIndex]) {
+                chartGroups[currentChartIndex].rotation.y += 0.005;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.onload = function () {
+            initThree();
+            if (isInitialized) {
+                animateLoop();
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showDemo('numpy'); 
+            // Generate notebook content on load, so it's ready when the modal is opened
+            const notebookContentDiv = document.getElementById('notebook-content');
+            notebookContentDiv.innerHTML = generatePythonNotebookContent();
+        });
+
+
+        // --- NOTEBOOK MODAL LOGIC ---
+        const notebookModal = document.getElementById('notebook-modal');
+
+        function showNotebookModal() {
+            notebookModal.style.display = 'flex';
+        }
+
+        function closeNotebookModal(event) {
+            if (!event || event.currentTarget === notebookModal) {
+                 notebookModal.style.display = 'none';
+            }
+        }
+
+        // --- Mock Data Setup for User Code Snippets ---
+        const MOCK_DATA = {
+            // Data for df=pd.DataFrame(np.random.randn(1000)...)
+            timeSeriesData: Array.from({ length: 1000 }, () => Math.random() * 10 - 5),
+            timeSeriesDates: Array.from({ length: 1000 }, (_, i) => {
+                const date = new Date('2023-07-01');
+                date.setDate(date.getDate() + i);
+                return date.toISOString().split('T')[0];
+            }),
+            // Data for x=np.random.randn(50), y=np.random.randn(50)
+            scatterX: Array.from({ length: 50 }, () => Math.random() * 10),
+            scatterY: Array.from({ length: 50 }, () => Math.random() * 10),
+            // Data for x=[1,2,3,4,5], y=[5,2,7,8,1]
+            basicX: [1, 2, 3, 4, 5],
+            basicY: [5, 2, 7, 8, 1],
+            // Data for plt.hist(data)
+            histData: Array.from({ length: 100 }, () => Math.random() * 30 + 50),
+            // Data for Seaborn "tips" dataset simulation
+            tips: {
+                total_bill: Array.from({ length: 50 }, () => (Math.random() * 30 + 10).toFixed(2)).map(Number),
+                tip: Array.from({ length: 50 }, () => (Math.random() * 3 + 1).toFixed(2)).map(Number),
+                size: Array.from({ length: 50 }, () => Math.floor(Math.random() * 4) + 1), // 1 to 5 people
+                smoker: Array.from({ length: 50 }, () => ['Yes', 'No'][Math.floor(Math.random() * 2)]),
+            },
+            // Data for Seaborn "fmri" dataset simulation
+            fmri: {
+                timepoint: Array.from({ length: 100 }, (_, i) => i % 10), // 10 timepoints repeated
+                value: Array.from({ length: 100 }, (_, i) => Math.sin(i / 10) * 2 + Math.random() * 0.5), // Sin wave trend
+                event: Array.from({ length: 100 }, () => ['stim', 'cue'][Math.floor(Math.random() * 2)]),
+                region: Array.from({ length: 100 }, () => ['frontal', 'parietal'][Math.floor(Math.random() * 2)]),
+            },
+        };
+
+        // --- NEW: Chart Rendering for User Code ---
+        function runPythonCode(chartType) {
+            const outputDiv = document.getElementById(`plot-${chartType}`);
+            const runButton = document.getElementById(`run-btn-${chartType}`);
+            const darkLayout = {
+                plot_bgcolor: '#1e293b',
+                paper_bgcolor: '#1e293b',
+                font: { color: '#e2e8f0' },
+                xaxis: { gridcolor: '#334155' },
+                yaxis: { gridcolor: '#334155' },
+                margin: { t: 40, b: 40, l: 40, r: 20 },
+                height: 400
+            };
+
+            let data = [];
+            let layout = {...darkLayout, title: `Plotly Simulation of ${chartType}`};
+
+            // Reset visibility
+            document.querySelectorAll('.plot-output').forEach(div => div.classList.add('hidden'));
+            document.querySelectorAll('.run-button').forEach(btn => btn.classList.remove('hidden'));
+            
+            // Handle subplots: clear and recreate specific to user's layout
+            if (chartType === 'subplot') {
+                outputDiv.innerHTML = ''; // Clear for subplots
+                layout.grid = { rows: 2, columns: 1, pattern: 'independent' };
+                layout.height = 600; // Increased height for two plots
+                
+                const x_sin = Array.from({ length: 100 }, (_, i) => i * 0.1);
+                const y_sin = x_sin.map(x => Math.sin(x));
+                const y_cos = x_sin.map(x => Math.cos(x));
+
+                const trace1 = {
+                    x: x_sin,
+                    y: y_sin,
+                    mode: 'lines',
+                    line: { color: '#93c5fd' },
+                    name: 'sin(x)',
+                    xaxis: 'x1',
+                    yaxis: 'y1'
+                };
+                const trace2 = {
+                    x: x_sin,
+                    y: y_cos,
+                    mode: 'lines',
+                    line: { color: '#22d3ee' },
+                    name: 'cos(x)',
+                    xaxis: 'x2',
+                    yaxis: 'y2'
+                };
+                data = [trace1, trace2];
+
+                layout.title = 'Matplotlib Subplot (Sine and Cosine)';
+                layout.xaxis = { domain: [0, 1], anchor: 'y1', title: 'X-axis' };
+                layout.yaxis = { domain: [0.55, 1], anchor: 'x1', title: 'Y-axis (sin)' };
+                layout.xaxis2 = { domain: [0, 1], anchor: 'y2', title: 'X-axis' };
+                layout.yaxis2 = { domain: [0, 0.45], anchor: 'x2', title: 'Y-axis (cos)' };
+
+            } else if (chartType === 'line_date') {
+                data = [{
+                    x: MOCK_DATA.timeSeriesDates,
+                    y: MOCK_DATA.timeSeriesData.map((v, i) => MOCK_DATA.timeSeriesData.slice(0, i+1).reduce((a, b) => a + b, 0)), // Cumulative sum
+                    mode: 'lines',
+                    line: { color: '#22d3ee', width: 2 },
+                }];
+                layout.title = 'Pandas Time Series Line Plot';
+                layout.xaxis.title = 'Date Index (1000 Periods)';
+                layout.yaxis.title = 'Cumulative Sum Value';
+                layout.height = 200; // Simulating small figsize=(10, 1)
+
+            } else if (chartType === 'scatter_basic') {
+                data = [{
+                    x: MOCK_DATA.scatterX,
+                    y: MOCK_DATA.scatterY,
+                    mode: 'markers',
+                    type: 'scatter',
+                    marker: { color: '#93c5fd', size: 10, opacity: 0.8 },
+                }];
+                layout.title = 'Matplotlib Basic Scatter Plot';
+                layout.xaxis.title = 'X (Random)';
+                layout.yaxis.title = 'Y (Random)';
+
+            } else if (chartType === 'line_styled') {
+                data = [{
+                    x: MOCK_DATA.basicX,
+                    y: MOCK_DATA.basicY,
+                    mode: 'lines+markers',
+                    line: { color: 'red', dash: 'dash', width: 3 },
+                    marker: { symbol: 'circle', size: 10, color: 'red' }
+                }];
+                layout.title = 'Line Plot';
+                layout.xaxis.title = 'x-axis';
+                layout.yaxis.title = 'y-axis';
+
+            } else if (chartType === 'hist') {
+                data = [{
+                    x: MOCK_DATA.histData,
+                    type: 'histogram',
+                    marker: { color: '#22d3ee', line: { color: '#1e293b', width: 1 } },
+                    opacity: 0.8
+                }];
+                layout.title = 'Matplotlib Histogram';
+                layout.xaxis.title = 'Value Bins';
+                layout.yaxis.title = 'Frequency';
+                
+            } else if (chartType === 'rel_style') {
+                // Seaborn style="size"
+                const uniqueSizes = [...new Set(MOCK_DATA.tips.size)].sort((a,b) => a-b);
+                data = uniqueSizes.map(size => ({
+                    x: MOCK_DATA.tips.total_bill.filter((_, i) => MOCK_DATA.tips.size[i] === size),
+                    y: MOCK_DATA.tips.tip.filter((_, i) => MOCK_DATA.tips.size[i] === size),
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: `Size: ${size}`,
+                    marker: { 
+                        size: size * 5, // Size encoding
+                        color: ['#93c5fd', '#22d3ee', '#ffcc00', '#ff6666', '#00ff99'][size-1],
+                        opacity: 0.8 
+                    }
+                }));
+                layout.title = 'Seaborn relplot: Total Bill vs Tip (Styled by Size)';
+                layout.xaxis.title = 'total_bill';
+                layout.yaxis.title = 'tip';
+
+            } else if (chartType === 'rel_hue') {
+                // Seaborn hue="smoker"
+                const smokers = ['Yes', 'No'];
+                data = smokers.map(smoker => ({
+                    x: MOCK_DATA.tips.total_bill.filter((_, i) => MOCK_DATA.tips.smoker[i] === smoker),
+                    y: MOCK_DATA.tips.tip.filter((_, i) => MOCK_DATA.tips.smoker[i] === smoker),
+                    mode: 'markers',
+                    type: 'scatter',
+                    name: `Smoker: ${smoker}`,
+                    marker: { 
+                        color: smoker === 'Yes' ? '#ff6666' : '#93c5fd',
+                        size: 10,
+                        opacity: 0.8 
+                    }
+                }));
+                layout.title = 'Seaborn relplot: Total Bill vs Tip (Hued by Smoker)';
+                layout.xaxis.title = 'total_bill';
+                layout.yaxis.title = 'tip';
+                
+            } else if (chartType === 'rel_line') {
+                // Seaborn kind="line" on simulated time series
+                data = [{
+                    x: MOCK_DATA.timeSeriesDates.slice(0, 500),
+                    y: MOCK_DATA.fmri.value.slice(0, 500).map((v, i) => MOCK_DATA.fmri.value.slice(0, i+1).reduce((a, b) => a + b, 0)),
+                    mode: 'lines',
+                    line: { color: '#00ff99', width: 3 },
+                    name: 'Cumulative Value'
+                }];
+                layout.title = 'Seaborn relplot: Time Series Line Plot';
+                layout.xaxis.title = 'time';
+                layout.yaxis.title = 'value';
+                
+            } else if (chartType === 'fmri_line') {
+                // Seaborn fmri line plot
+                const uniqueRegions = ['frontal', 'parietal'];
+                const uniqueEvents = ['stim', 'cue'];
+
+                uniqueRegions.forEach(region => {
+                    uniqueEvents.forEach(event => {
+                        const traceData = {
+                            x: [], y: [],
+                            name: `${region} - ${event}`,
+                            mode: 'lines',
+                            line: { width: 3 }
+                        };
+                        const filteredIndices = MOCK_DATA.fmri.region
+                            .map((r, i) => (r === region && MOCK_DATA.fmri.event[i] === event) ? i : -1)
+                            .filter(i => i !== -1);
+
+                        // Calculate mean value for each timepoint
+                        const timepointMeans = {};
+                        filteredIndices.forEach(i => {
+                            const tp = MOCK_DATA.fmri.timepoint[i];
+                            if (!timepointMeans[tp]) timepointMeans[tp] = { sum: 0, count: 0 };
+                            timepointMeans[tp].sum += MOCK_DATA.fmri.value[i];
+                            timepointMeans[tp].count += 1;
+                        });
+
+                        Object.keys(timepointMeans).sort().forEach(tp => {
+                            traceData.x.push(parseInt(tp));
+                            traceData.y.push(timepointMeans[tp].sum / timepointMeans[tp].count);
+                        });
+                        
+                        // Assign colors based on event
+                        if (event === 'stim') {
+                            traceData.line.color = region === 'frontal' ? '#22d3ee' : '#93c5fd';
+                        } else {
+                            traceData.line.color = region === 'frontal' ? '#ffcc00' : '#ff6666';
+                        }
+
+                        data.push(traceData);
+                    });
+                });
+                layout.title = 'Seaborn relplot: fmri Timepoint vs Value';
+                layout.xaxis.title = 'timepoint';
+                layout.yaxis.title = 'value (Mean)';
+            }
+
+
+            // Render the plot
+            Plotly.newPlot(outputDiv, data, layout, {responsive: true, displayModeBar: false});
+
+            // Hide the button and show the output div
+            runButton.classList.add('hidden');
+            outputDiv.classList.remove('hidden');
+            outputDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+
+        function generatePythonNotebookContent() {
+            // Helper function to create the HTML structure for a single chart cell
+            const createChartCell = (title, chartType, codeSnippet, description = '') => `
+                <div class="notebook-cell">
+                    <h4 class="text-2xl font-bold text-accent-cyan mb-3">${title}</h4>
+                    ${description ? `<p class="text-gray-400 mb-3">${description}</p>` : ''}
+                    
+                    <!-- Code Block -->
+                    <pre class="bg-gray-900 p-4 rounded-t-lg mt-2 mb-0 overflow-x-auto text-sm text-green-400">
+${codeSnippet}
+                    </pre>
+
+                    <!-- Run Button -->
+                    <button id="run-btn-${chartType}" onclick="runPythonCode('${chartType}')" 
+                        class="w-full bg-primary-blue hover:bg-accent-cyan text-bg-dark font-semibold py-2 rounded-b-none rounded-lg shadow-md transition duration-300 transform hover:scale-[1.005] run-button">
+                        ▶ Run Code: View ${title}
+                    </button>
+
+                    <!-- Visualization Output Area (Hidden by default) -->
+                    <div id="plot-${chartType}" class="w-full h-96 bg-gray-900 rounded-b-lg p-2 border border-accent-cyan/50 mt-4 hidden plot-output">
+                        <p class="text-center text-gray-500 pt-16">Visualization will appear here...</p>
+                    </div>
+                </div>
+            `;
+
+            // Python boilerplate setup for context
+            const setupCode = `
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+import warnings
+warnings.filterwarnings('ignore')
+
+# Simulated Setup Data (as in your snippets):
+# df for time series
+df = pd.DataFrame(np.random.randn(1000), 
+                  columns=[' data'],
+                  index=pd.date_range(start='2023-07-01',periods=1000))
+# x, y for scatter/line
+x=np.random.randn(50)
+y=np.random.randn(50)
+# data for histogram
+data=np.random.randn(100)
+# Seaborn datasets
+df1 = sns.load_dataset("tips")
+fmri = sns.load_dataset("fmri")
+            `;
+
+            let content = `
+                <h4 class="text-2xl font-bold text-primary-blue mb-4">1. Environment Setup and Data Initialization</h4>
+                <p class="text-gray-300 mb-2">This block shows the necessary imports and data structures used in the subsequent code cells.</p>
+                <pre class="bg-gray-900 p-4 rounded-lg mt-2 mb-6 overflow-x-auto text-sm text-green-400">
+${setupCode}
+                </pre>
+            `;
+
+            // --- 2. Pandas Plotting (Time Series) ---
+            content += createChartCell(
+                'Pandas Line Plot on DataFrame (Time Series)',
+                'line_date',
+                `df.plot(figsize=(10,1))`,
+                'Plots the time series data stored in the DataFrame, showing the trend over 1000 periods.'
+            );
+
+            // --- 3. Matplotlib Scatter Plot ---
+            content += createChartCell(
+                'Matplotlib Basic Scatter Plot',
+                'scatter_basic',
+                `x=np.random.randn(50)
+y=np.random.randn(50)
+plt.scatter(x,y)`,
+                'Displays the relationship between two random, numerical arrays $x$ and $y$.'
+            );
+
+            // --- 4. Matplotlib Styled Line Plot ---
+            content += createChartCell(
+                'Matplotlib Styled Line Plot',
+                'line_styled',
+                `x=[1,2,3,4,5]
+y=[5,2,7,8,1]
+plt.plot(x,y,color='red',marker="o", linestyle ='--')
+plt.xlabel('x-axis')
+plt.ylabel('y-axis')
+plt.title('line plot')`,
+                'A customizable line plot showing how to control color, marker, and line style.'
+            );
+
+            // --- 5. Matplotlib Subplots ---
+            content += createChartCell(
+                'Matplotlib Multi-Plot (Subplots)',
+                'subplot',
+                `plt.figure()
+plt.subplot(2,1,1)
+plt.plot(x,np.sin(x))
+
+plt.subplot(2,1,2)
+plt.plot(y,np.cos(y))`,
+                'Creates two plots vertically stacked in a single figure window, using $\\sin(x)$ and $\\cos(y)$ for illustration.'
+            );
+            
+            // --- 6. Matplotlib Histogram ---
+            content += createChartCell(
+                'Matplotlib Histogram',
+                'hist',
+                `data=np.random.randn(100)
+plt.hist(data)
+plt.show()`,
+                'Shows the frequency distribution of a randomly generated dataset.'
+            );
+
+            // --- 7. Seaborn Relational Plot (Style/Size) ---
+            content += createChartCell(
+                'Seaborn Relational Scatter Plot (Style="size")',
+                'rel_style',
+                `sns.relplot(x="total_bill",y="tip",data=df1,style="size")`,
+                'Plots Total Bill vs Tip, differentiating point style/size by the table size ("size" variable in tips dataset).'
+            );
+
+            // --- 8. Seaborn Relational Plot (Hue/Color) ---
+            content += createChartCell(
+                'Seaborn Relational Scatter Plot (Hue)',
+                'rel_hue',
+                `sns.relplot(x="total_bill",y="tip",data=df1,hue="smoker")`,
+                'Plots Total Bill vs Tip, differentiating point color based on the "smoker" variable in the tips dataset.'
+            );
+            
+            // --- 9. Seaborn Relational Plot (Line Kind) ---
+            content += createChartCell(
+                'Seaborn Relational Line Plot (Time Series)',
+                'rel_line',
+                `time=np.arange(500)
+value=np.random.randn(500).cumsum()
+df=pd.DataFrame({'time':time,'value':value})
+sns.relplot(x="time",y="value",kind="line",data=df)`,
+                'Uses relplot with $kind="line"$ to show the trend of a simulated time series data.'
+            );
+            
+            // --- 10. Seaborn fmri Line Plot ---
+            content += createChartCell(
+                'Seaborn fmri Multi-Line Plot (Timepoint)',
+                'fmri_line',
+                `sns.relplot(x="timepoint",y="value",data=fmri,kind="line")`,
+                'Plots the average value over timepoints, automatically grouping and drawing separate lines for different experimental conditions (event/region).'
+            );
+
+
+            return content;
+        }
+        
+    </script>
+</body>
+</html>
+
